@@ -1,0 +1,8 @@
+.venv/
+.vscode/
+node_modules/
+*.zip
+files/dist/
+files/build/
+*.exe
+*.pkg
