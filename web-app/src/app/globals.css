@@ -1,0 +1,179 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --c-bg: #0e0e12;
+  --c-bg-glass: rgba(14, 14, 18, 0.7);
+  --c-bg-glass-light: rgba(30, 30, 36, 0.6);
+  --c-teal: #d2e600; /* Matching Python teal (210, 230, 0) -> #d2e600 */
+  --c-orange: #0096ff; /* Actually their orange was (0, 150, 255) which is a blue-ish orange? Wait, OpenCV BGR is (0, 150, 255) -> RGB (255, 150, 0) which is orange! */
+  /* Ah! OpenCV uses BGR. (0, 150, 255) BGR is rgb(255, 150, 0) */
+  --c-teal-rgb: 0, 230, 210; /* BGR (210, 230, 0) -> RGB (0, 230, 210) Teal */
+  --c-orange-rgb: 255, 150, 0; /* BGR (0, 150, 255) -> RGB (255, 150, 0) Orange */
+  --c-green-rgb: 60, 220, 80; /* BGR (80, 220, 60) -> RGB (60, 220, 80) Green */
+  --c-red-rgb: 255, 60, 60; /* BGR (60, 60, 255) -> RGB (255, 60, 60) Red */
+  --c-purple-rgb: 180, 60, 220; /* BGR (220, 60, 180) -> RGB (180, 60, 220) Purple */
+  
+  --c-teal-hex: #00e6d2;
+  --c-orange-hex: #ff9600;
+  --c-green-hex: #3cdc50;
+  --c-red-hex: #ff3c3c;
+  --c-purple-hex: #b43cdc;
+  
+  --c-white: #e6e6e6;
+  --c-dim: #5a5a5a;
+  --c-darker: #28282d;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+}
+
+body {
+  background-color: var(--c-bg);
+  color: var(--c-white);
+  overflow: hidden;
+  user-select: none;
+}
+
+/* Glassmorphism Panels */
+.glass-panel {
+  background: var(--c-bg-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  font-weight: 700;
+}
+
+.text-teal { color: var(--c-teal-hex); }
+.text-orange { color: var(--c-orange-hex); }
+.text-green { color: var(--c-green-hex); }
+.text-red { color: var(--c-red-hex); }
+.text-purple { color: var(--c-purple-hex); }
+.text-dim { color: var(--c-dim); }
+
+.bg-teal { background-color: var(--c-teal-hex); }
+
+/* Layout Utilities */
+.flex { display: flex; }
+.flex-col { display: flex; flex-direction: column; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.gap-2 { gap: 0.5rem; }
+.gap-4 { gap: 1rem; }
+.p-4 { padding: 1rem; }
+.p-6 { padding: 1.5rem; }
+
+/* Dashboard Layout */
+.dashboard-layout {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+}
+
+.main-view {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+.side-panel {
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid var(--c-teal-hex);
+  z-index: 10;
+}
+
+/* Smartboard Overlay */
+.smartboard-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+  pointer-events: none; /* Let clicks pass through if needed, though we use gestures */
+}
+
+/* Webcam Background */
+.webcam-feed {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1); /* Mirror */
+  opacity: 1; /* Changed to fully visible so it's not black */
+  z-index: 1;
+}
+
+/* Landmarks Overlay */
+.landmarks-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1);
+  z-index: 20;
+  pointer-events: none;
+}
+
+/* Animations */
+@keyframes pulse {
+  0% { opacity: 0.8; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+  100% { opacity: 0.8; transform: scale(1); }
+}
+
+.animate-pulse {
+  animation: pulse 2s infinite ease-in-out;
+}
+
+/* Progress Ring */
+.progress-ring {
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+}
+.progress-ring-circle {
+  transition: stroke-dashoffset 0.1s linear;
+}
+
+/* Custom virtual cursor */
+.virtual-cursor {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: var(--c-teal-hex);
+  box-shadow: 0 0 15px var(--c-teal-hex);
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: width 0.1s, height 0.1s, background-color 0.2s;
+}
+
+.virtual-cursor.clicking {
+  width: 16px;
+  height: 16px;
+  background-color: var(--c-green-hex);
+  box-shadow: 0 0 20px var(--c-green-hex);
+}
+
+.virtual-cursor.drawing {
+  background-color: var(--c-orange-hex);
+  box-shadow: 0 0 15px var(--c-orange-hex);
+}
